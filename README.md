@@ -12,7 +12,13 @@ A PowerShell based tool which controls a software project build process.
 
 Please execute following commands:
 ```
+Windows
 nuget.exe install psmake -version 3.1.0.0
+
+Powershell Core
+Register-PackageSource -name Nuget.Org -Location "http://www.nuget.org/api/v2" -ProviderName NuGet
+Install-Package PsMake -RequiredVersion 3.1.0.0 -Destination ".\" -ProviderName NuGet 
+
 .\psmake.3.1.0.0\psmake.ps1 -Scaffold empty
 ls
 ```

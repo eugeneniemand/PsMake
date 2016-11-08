@@ -49,8 +49,15 @@ function private:Get-NuGetArgs (`$params, `$defaultSource)
 	return @()
 }
 
-`$private:srcArgs = Get-NuGetArgs `$args `$PsMakeNugetSource
-$($Context.NuGetExe) install psmake -Version `$PsMakeVer -OutputDirectory $($Context.MakeDirectory) $nuArgs @srcArgs
+if (`$PSVersionTable["PSVersion"].Major -ge 5) {
+  Write-Host "Installing using Powershell Package Manager"
+  Install-Package PsMake -RequiredVersion `$PsMakeVer -Destination "`$pwd\make" -ProviderName nuget -Force
+} 
+else {
+  Write-Host "Installing using Nuget"
+  `$private:srcArgs = Get-NuGetArgs `$args `$PsMakeNugetSource
+  $($Context.NuGetExe) install psmake -Version `$PsMakeVer -OutputDirectory $($Context.MakeDirectory) $nuArgs @srcArgs
+}
 & `"$($Context.MakeDirectory)\psmake.`$PsMakeVer\psmake.ps1`" -md $($Context.MakeDirectory) @args
 "@
 	
